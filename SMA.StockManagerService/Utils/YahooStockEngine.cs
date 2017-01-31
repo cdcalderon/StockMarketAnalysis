@@ -119,19 +119,32 @@ namespace SMA.StockManagerService.Utils
         }
 
 
-        public static IEnumerable<DTO.Quote> ParseHistorical(XDocument doc)
+        public static IEnumerable<HQuote> ParseHistorical(XDocument doc)
         {
             XElement results = doc.Root.Element("results");
 
-            var stockQuotes = results.Elements("quote").Select(q => new DTO.Quote
+            //var stockQuotes = results.Elements("quote").Select(q => new DTO.Quote
+            //{
+            //    Symbol = (string)q.Element("Symbol"),
+            //    DailyHigh = (decimal)q.Element("High"),
+            //}).ToList();
+
+            var stockQuotes = results.Elements("quote").Select(q => new HQuote
             {
-                Symbol = (string)q.Element("Symbol"),
-                DailyHigh = (decimal)q.Element("High"),
+                Symbol = (string)q.Attribute("Symbol"),
+                Date = Convert.ToDateTime((string)q.Element("Date")),
+                Open = (decimal)q.Element("Open"),
+                High = (decimal)q.Element("High"),
+                Low = (decimal)q.Element("Low"),
+                Close = (decimal)q.Element("Close"),
+                Volume = (decimal)q.Element("Volume")
             }).ToList();
 
             return stockQuotes;
+            // return stockQuotes;
         }
 
+        
         private static decimal? GetDecimal(string input)
         {
             if (input == null) return null;

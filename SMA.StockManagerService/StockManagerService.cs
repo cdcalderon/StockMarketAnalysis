@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using SMA.Data;
 using SMA.StockManagerService.Constants;
+using SMA.StockManagerService.Helpers;
 using SMA.StockManagerService.Utils;
 
 namespace SMA.StockManagerService
@@ -17,9 +19,10 @@ namespace SMA.StockManagerService
 
         public bool Start()
         {
-            GetQuote();
-            GetHistoricalQuotes();
-            _watcher = new FileSystemWatcher(@"c:\temp\a", "*_in.txt");
+            // GetQuote();
+          //  PopulateHistoricalQuotes("DPZ");
+           FindGap();
+             _watcher = new FileSystemWatcher(@"c:\temp\a", "*_in.txt");
 
             _watcher.Created += FileCreated;
             _watcher.IncludeSubdirectories = false;
@@ -72,13 +75,74 @@ namespace SMA.StockManagerService
             
         }
 
-        private void GetHistoricalQuotes()
+        private IEnumerable<HQuote> GetHistoricalQuotes(string symbol, string startDate, string endDate)
         {
-            XDocument doc = XDocument.Load(StockMarketAnalysisConstants.YahooQuoteHistoricalAPI);
-            var stockHistoricalQuote = YahooStockEngine.ParseHistorical(doc);
+            var url = string.Format(StockMarketAnalysisConstants.YahooQuoteHistoricalAPI, symbol, startDate, endDate);
+            XDocument doc = XDocument.Load(url);
+           return YahooStockEngine.ParseHistorical(doc);
             
         }
+        
 
+        public void PopulateHistoricalQuotes(string symbol)
+        {
+            IEnumerable<HistoricalQuoteParams> hqps = new List<HistoricalQuoteParams>()
+            {
+                new HistoricalQuoteParams()
+                {
+                    Symbol = symbol,
+                    StartDate = "2015-02-05",
+                    EndDate = "2015-12-31"
+                },
+                new HistoricalQuoteParams()
+                {
+                    Symbol = symbol,
+                    StartDate = "2016-01-01",
+                    EndDate = "2016-12-31"
+                },
+                new HistoricalQuoteParams()
+                {
+                    Symbol = symbol,
+                    StartDate = "2017-01-01",
+                    EndDate = "2017-01-31"
+                },
+            };
+
+
+            using (StockMarketAnalysis context = new StockMarketAnalysis())
+            {
+                foreach (var hQuoteParam in hqps)
+                {
+                    foreach (
+                        var q in GetHistoricalQuotes(hQuoteParam.Symbol, hQuoteParam.StartDate, hQuoteParam.EndDate))
+                    {
+                        HQuote hq = new HQuote();
+                        hq.Symbol = q.Symbol;
+                        hq.Date = q.Date;
+                        hq.Open = q.Open;
+                        hq.High = q.High;
+                        hq.Low = q.Low;
+                        hq.Close = q.Close;
+                        hq.Volume = q.Volume;
+
+                        context.HQuotes.Add(hq);
+                    }
+                    context.SaveChanges();
+
+                }
+
+            }
+        }
+
+        public void FindGap()
+        {
+            StockGapEngine sge = new StockGapEngine();
+            using (StockMarketAnalysis context = new StockMarketAnalysis())
+            {
+                sge.FindGap(context.HQuotes.ToList());
+            }
+        }
+        
         public bool Stop()
         {
             _watcher.Dispose();
