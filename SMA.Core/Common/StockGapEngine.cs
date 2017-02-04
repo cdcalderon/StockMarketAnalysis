@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SMA.Data;
+using SMA.Core.Models;
 
-namespace SMA.StockManagerService.Utils
+namespace SMA.Core.Common
 {
     public class StockGapEngine
     {
         public void FindGap(List<HQuote> quotes)
         {
-            var quotesWDiffs = quotes.Select(
-                (myObject, index) =>
+            var quotesWDiffs = Enumerable.Select(quotes, (myObject, index) =>
                     new
                     {
                         ID = myObject.Symbol,
                         Date = myObject.Date,
                         Value = myObject.Close,
-                        DiffToPrev = (index > 0 ? myObject.Close - quotes[index - 1].Close : 0)
+                        DiffToPrev = (index > 0 ? Math.Abs((decimal) (myObject.Close.Value - quotes[index - 1].Close.Value)) : 0)
                     }
 
 

@@ -7,6 +7,7 @@ using System.Xml.Linq;
 using SMA.Data;
 
 using System.Linq.Expressions;
+using SMA.Core.Models;
 
 namespace SMA.StockManagerService.Utils
 {

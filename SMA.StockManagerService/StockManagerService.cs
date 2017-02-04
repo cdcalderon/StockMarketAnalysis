@@ -6,6 +6,8 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using SMA.Core.Common;
+using SMA.Core.Models;
 using SMA.Data;
 using SMA.StockManagerService.Constants;
 using SMA.StockManagerService.Helpers;

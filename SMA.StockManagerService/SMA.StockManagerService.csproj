@@ -61,7 +61,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StockManagerService.cs" />
-    <Compile Include="Utils\StockGapEngine.cs" />
     <Compile Include="Utils\YahooStockEngine.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -69,6 +68,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SMA.Core\SMA.Core.csproj">
+      <Project>{1c62359d-cc13-4590-8d96-e50d5b8f56bf}</Project>
+      <Name>SMA.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SMA.Data\SMA.Data.csproj">
       <Project>{d551e1cb-1d07-441d-970b-54d235ac991f}</Project>
       <Name>SMA.Data</Name>
