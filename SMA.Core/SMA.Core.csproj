@@ -41,6 +41,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\StockGapEngine.cs" />
+    <Compile Include="DTOs\Quote.cs" />
+    <Compile Include="DTOs\QuoteChartItem.cs" />
+    <Compile Include="DTOs\QuoteQuery.cs" />
+    <Compile Include="DTOs\QuoteResult.cs" />
+    <Compile Include="DTOs\StockGap.cs" />
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\Exchange.cs" />
     <Compile Include="Models\HQuote.cs" />

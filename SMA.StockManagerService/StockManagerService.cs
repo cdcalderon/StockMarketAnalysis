@@ -21,9 +21,9 @@ namespace SMA.StockManagerService
 
         public bool Start()
         {
-            // GetQuote();
+             GetQuote();
           //  PopulateHistoricalQuotes("DPZ");
-           FindGap();
+          // FindGap();
              _watcher = new FileSystemWatcher(@"c:\temp\a", "*_in.txt");
 
             _watcher.Created += FileCreated;
@@ -95,19 +95,7 @@ namespace SMA.StockManagerService
                     Symbol = symbol,
                     StartDate = "2015-02-05",
                     EndDate = "2015-12-31"
-                },
-                new HistoricalQuoteParams()
-                {
-                    Symbol = symbol,
-                    StartDate = "2016-01-01",
-                    EndDate = "2016-12-31"
-                },
-                new HistoricalQuoteParams()
-                {
-                    Symbol = symbol,
-                    StartDate = "2017-01-01",
-                    EndDate = "2017-01-31"
-                },
+                }
             };
 
 
@@ -115,8 +103,8 @@ namespace SMA.StockManagerService
             {
                 foreach (var hQuoteParam in hqps)
                 {
-                    foreach (
-                        var q in GetHistoricalQuotes(hQuoteParam.Symbol, hQuoteParam.StartDate, hQuoteParam.EndDate))
+                    var hQuotes = GetHistoricalQuotes(hQuoteParam.Symbol, hQuoteParam.StartDate, hQuoteParam.EndDate);
+                    foreach (var q in hQuotes)
                     {
                         HQuote hq = new HQuote();
                         hq.Symbol = q.Symbol;
@@ -138,10 +126,9 @@ namespace SMA.StockManagerService
 
         public void FindGap()
         {
-            StockGapEngine sge = new StockGapEngine();
             using (StockMarketAnalysis context = new StockMarketAnalysis())
             {
-                sge.FindGap(context.HQuotes.ToList());
+                StockGapEngine.FindGap(context.HQuotes.ToList());
             }
         }
         
