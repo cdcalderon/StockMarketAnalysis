@@ -12,5 +12,6 @@ namespace SMA.Core.Models
         public decimal? Low { get; set; }
         public decimal? Close { get; set; }
         public decimal? Volume { get; set; }
+        public decimal? SevenDayMovingAvg { get; set; }
     }
 }

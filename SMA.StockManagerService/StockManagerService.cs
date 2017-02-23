@@ -21,8 +21,8 @@ namespace SMA.StockManagerService
 
         public bool Start()
         {
-             GetQuote();
-          //  PopulateHistoricalQuotes("DPZ");
+           //  GetQuote();
+            PopulateHistoricalQuotes("AMZN");
           // FindGap();
              _watcher = new FileSystemWatcher(@"c:\temp\a", "*_in.txt");
 
@@ -90,11 +90,12 @@ namespace SMA.StockManagerService
         {
             IEnumerable<HistoricalQuoteParams> hqps = new List<HistoricalQuoteParams>()
             {
+                //Add Extra records per Year 
                 new HistoricalQuoteParams()
                 {
                     Symbol = symbol,
-                    StartDate = "2015-02-05",
-                    EndDate = "2015-12-31"
+                    StartDate = "2016-02-23",
+                    EndDate = "2017-02-22"
                 }
             };
 
@@ -103,7 +104,9 @@ namespace SMA.StockManagerService
             {
                 foreach (var hQuoteParam in hqps)
                 {
-                    var hQuotes = GetHistoricalQuotes(hQuoteParam.Symbol, hQuoteParam.StartDate, hQuoteParam.EndDate);
+                    var hQuotes = GetHistoricalQuotes(hQuoteParam.Symbol, hQuoteParam.StartDate, hQuoteParam.EndDate).ToList();
+                    var sevenDayMovAvgs = GetMovingAverages(hQuotes, 7).ToList();
+                    int index = 0;
                     foreach (var q in hQuotes)
                     {
                         HQuote hq = new HQuote();
@@ -114,8 +117,10 @@ namespace SMA.StockManagerService
                         hq.Low = q.Low;
                         hq.Close = q.Close;
                         hq.Volume = q.Volume;
-
+                        hq.SevenDayMovingAvg = index < sevenDayMovAvgs.Count ? sevenDayMovAvgs[index] : 0;
                         context.HQuotes.Add(hq);
+
+                        index++;
                     }
                     context.SaveChanges();
 
@@ -137,6 +142,17 @@ namespace SMA.StockManagerService
             _watcher.Dispose();
 
             return true;
+        }
+
+        public IEnumerable<decimal?> GetMovingAverages(IList<HQuote> quotes, int period)
+        {
+           // var ps = quotes.Select(x => x.Close).ToList();
+            int periodLength = period;
+
+            return Enumerable
+                .Range(0, quotes.Count - periodLength)
+                .Select(n => quotes.Skip(n).Take(periodLength).Average(x => x.Close))
+                .ToList();
         }
 
     }

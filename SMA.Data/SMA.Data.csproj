@@ -57,6 +57,10 @@
     <Compile Include="Migrations\201701300315135_UpdateStockAndAddHQuote.Designer.cs">
       <DependentUpon>201701300315135_UpdateStockAndAddHQuote.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702230458309_AddSevenDayMovingAvg.cs" />
+    <Compile Include="Migrations\201702230458309_AddSevenDayMovingAvg.Designer.cs">
+      <DependentUpon>201702230458309_AddSevenDayMovingAvg.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StockMarketAnalysis.cs" />
@@ -71,6 +75,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701300315135_UpdateStockAndAddHQuote.resx">
       <DependentUpon>201701300315135_UpdateStockAndAddHQuote.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702230458309_AddSevenDayMovingAvg.resx">
+      <DependentUpon>201702230458309_AddSevenDayMovingAvg.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
