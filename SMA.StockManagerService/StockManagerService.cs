@@ -12,6 +12,8 @@ using SMA.Data;
 using SMA.StockManagerService.Constants;
 using SMA.StockManagerService.Helpers;
 using SMA.StockManagerService.Utils;
+using TicTacTec.TA.Library;
+
 
 namespace SMA.StockManagerService
 {
@@ -21,11 +23,12 @@ namespace SMA.StockManagerService
 
         public bool Start()
         {
-           //  GetQuote();
-            PopulateHistoricalQuotes("AMZN");
-          // FindGap();
+            Test();
+             //  GetQuote();
+             // PopulateHistoricalQuotes("AMZN");
+             // FindGap();
              _watcher = new FileSystemWatcher(@"c:\temp\a", "*_in.txt");
-
+           
             _watcher.Created += FileCreated;
             _watcher.IncludeSubdirectories = false;
             _watcher.EnableRaisingEvents = true;
@@ -109,6 +112,10 @@ namespace SMA.StockManagerService
                     int index = 0;
                     foreach (var q in hQuotes)
                     {
+
+                        
+
+
                         HQuote hq = new HQuote();
                         hq.Symbol = q.Symbol;
                         hq.Date = q.Date;
@@ -153,6 +160,11 @@ namespace SMA.StockManagerService
                 .Range(0, quotes.Count - periodLength)
                 .Select(n => quotes.Skip(n).Take(periodLength).Average(x => x.Close))
                 .ToList();
+        }
+
+        public static void Test()
+        {
+            var me = TicTacTec.TA.Library.Core.AroonLookback(23);
         }
 
     }
